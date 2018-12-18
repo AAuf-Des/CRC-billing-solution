@@ -13,10 +13,6 @@ class invoice{
     int totalMins;
     public:
     void getNumber(long long int x);
-
-    void printNumber(){
-        cout << number << endl;
-    }
 };
 
 void invoice::getNumber(long long int x){
@@ -29,6 +25,33 @@ struct dateStruct{
     int day;
     int month;
     int year;
+
+    time_t epochTime;
+
+    void epochToDate()
+    {
+        struct tm localTime;
+        localTime = *localtime(&epochTime);
+        day = localTime.tm_mday;
+        month = localTime.tm_mon + 1;
+        year = localTime.tm_year + 1900;
+    }
+
+    //used to asign dates
+    void assignDate(struct tm readTime, int x){
+        day = 1;
+        month = readTime.tm_mon + x;
+        year = readTime.tm_year + 1900;
+        if (month <= 0){
+            month = month + 12;
+            year = year - 1;
+        }
+
+    }
+
+    void printDate(){
+        cout << year << "-" << month << "-" << day << endl;
+    }
 };
 
 
