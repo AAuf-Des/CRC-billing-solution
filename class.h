@@ -13,11 +13,10 @@ class invoice{
     int totalMiliSeconds;
     int totalMinutes = 0;
     int totalPrice;
-
 };
 
 
-struct dateClass{
+struct dateStruct{
     public:
     int day;
     int month;
@@ -30,7 +29,7 @@ class phoneCall{
     long long int reciver;
     long long int caller;
     time_t epochTime;
-    dateClass date;
+    dateStruct date;
     int duration;
     
 

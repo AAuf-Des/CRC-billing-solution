@@ -14,35 +14,26 @@ int countLines(string file);
 
 int main()
 {
-    int linesAmount = countLines(file);
-    //phoneCall *call = new phoneCall[linesAmount];
+    int linesAmount = countLines(file);        //couts amount of lines on cdr file i.e. how many calls the cdr contains.
     vector<phoneCall> call(linesAmount);
 
-
-    for (int i = 0; i < linesAmount; i++){
+    for (int i = 0; i < linesAmount; i++){                                      //gather data to the objects.
         call[i].getData(file, i);
     }
-    //remove before relase.
-    cout << "calls before sort" << endl;
-    for (int i = 0; i < linesAmount; i++){
-        call[i].printInfo();
-    }
 
-    //sorting algorithm
-    sort(call.begin(), call.end(), [ ]( const auto& left, const auto& right )
+    sort(call.begin(), call.end(), [ ]( const auto& left, const auto& right )   //sort phonecalls by phoneNumber, lowest to highest.
     {
         return left.pCaller < right.pCaller;
-    });
+    }); 
 
-    system("pause");
+    
 
-    cout << "calls after sort" << endl;
-    for (int i = 0; i < linesAmount; i++){
-        call[i].printInfo();
-    }  
+
     
     return 0;
 }
+
+
 
 int countLines(string file){
     int count = 0;
