@@ -31,7 +31,7 @@ class dateClass{
 
     void convertFromInt(int date);
     void printDate(){
-        cout << day << "/" << month << " - " << year << endl;
+        cout << year << "-" << month << " - " << day << endl;
     }
 };
 void dateClass::convertFromInt(int date){

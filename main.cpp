@@ -22,10 +22,6 @@ int main()
     for (int i = 0; i < linesAmount; i++){
         call[i].getData(file, i);
     }
-    for (int i = 0; i < linesAmount; i++){
-        call[i].printInfo();
-        Sleep(20);
-    }
 
     dateClass firstDate;
     dateClass lastDate;
