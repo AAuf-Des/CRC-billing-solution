@@ -10,9 +10,7 @@ using namespace std;
 class invoice{
     public:
     long long int number;
-    int totalMiliSeconds;
-    int totalMinutes = 0;
-    int totalPrice;
+    int totalMins;
 };
 
 
