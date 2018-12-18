@@ -8,10 +8,11 @@
 
 using namespace std;
 
-const string file = "cdrSort.txt";
+const string file = "cdrDiv.txt";
 
 int countLines(string file);
 int countAmountOfCallers(vector<phoneCall> call, int amountOfLines);
+void assignNumbersToInvoices(vector<phoneCall> call, invoice invoiceArray[], int amountOfLines);
 
 int main()
 {
@@ -26,22 +27,17 @@ int main()
     {
         return left.pCaller < right.pCaller;
     });
-    /*
-    for (int i = 0; i < linesAmount; i++){
-        call[i].printInfo();
-    }
-    */
 
     int amountOfCallers = countAmountOfCallers(call, linesAmount);
+    invoice *invoiceArray = new invoice[amountOfCallers];
 
-    cout << "amount of callers: " << amountOfCallers << endl;
+    assignNumbersToInvoices(call, invoiceArray, linesAmount);
+
+    invoiceArray[0].printNumber();
+    invoiceArray[1].printNumber();
+    invoiceArray[2].printNumber();
 
 
-
-
-
-
-    
     return 0;
 }
 
@@ -69,6 +65,16 @@ int countAmountOfCallers(vector<phoneCall> call, int amountOfLines){
         }
     }
     return count;
+}
+
+void assignNumbersToInvoices(vector<phoneCall> call, invoice invoiceArray[], int amountOfLines){
+    int invoiceNumber = 0;
+    for (int i = 0; i < amountOfLines; i++){
+        if (call[i].copyCaller() != call[i+1].copyCaller()){
+            invoiceArray[invoiceNumber].getNumber(call[i].copyCaller());
+            invoiceNumber++;
+        }
+    }
 }
 
 

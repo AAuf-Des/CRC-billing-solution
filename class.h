@@ -8,10 +8,20 @@
 using namespace std;
 
 class invoice{
-    public:
+    private:
     long long int number;
     int totalMins;
+    public:
+    void getNumber(long long int x);
+
+    void printNumber(){
+        cout << number << endl;
+    }
 };
+
+void invoice::getNumber(long long int x){
+    number = x;
+}
 
 
 struct dateStruct{
@@ -39,7 +49,7 @@ class phoneCall{
     
 
     //copy functions, return caller, duration etc etc..
-    int copyCaller();
+    long long int copyCaller();
     int copyDuration();
     int copyEpochTime();
 };
@@ -85,7 +95,7 @@ void phoneCall::epochToDate(){
     date.year = localTime.tm_year + 1900;
 }
 
-int phoneCall::copyCaller(){
+long long int phoneCall::copyCaller(){
     return caller;
 }
 
