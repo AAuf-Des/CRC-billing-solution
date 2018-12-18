@@ -9,22 +9,15 @@ using namespace std;
 
 class invoice{
     public:
-    int number;
+    long long int number;
     int totalMiliSeconds;
     int totalMinutes = 0;
     int totalPrice;
 
-    void printInvoice();
 };
 
-void invoice::printInvoice(){
-    cout << "phoneNumber: " << number << endl;
-    cout << "totalMinutes: " << totalMinutes << endl;
-    cout << "price for this duration: " << totalPrice << endl;
-    
-}
 
-class dateClass{
+struct dateClass{
     public:
     int day;
     int month;

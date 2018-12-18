@@ -6,12 +6,9 @@
 
 using namespace std;
 
-const string file = "cdrDbgTest.txt";
+const string file = "cdrSort.txt";
 
 int countLines(string file);
-void getInvoice(int amountOfLines, phoneCall call[], invoice &invoice);
-int getFirstDate(phoneCall call[], int amountOfLines);
-int getLastDate(phoneCall call[], int amountOfLines);
 
 int main()
 {
@@ -21,12 +18,14 @@ int main()
     for (int i = 0; i < linesAmount; i++){
         call[i].getData(file, i);
     }
-    /*
+    //remove before relase.
+    cout << "calls before sort" << endl;
     for (int i = 0; i < linesAmount; i++){
         call[i].printInfo();
     }
-    */
 
+
+    
     return 0;
 }
 
