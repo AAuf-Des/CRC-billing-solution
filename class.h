@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <ctime>
 using namespace std;
 
 class invoice{
@@ -28,45 +29,27 @@ class dateClass{
     int day;
     int month;
     int year;
-
-    void convertFromInt(int date);
-    void printDate(){
-        cout << year << "-" << month << " - " << day << endl;
-    }
 };
-void dateClass::convertFromInt(int date){
-    int tempDate = date;
-    day = tempDate % 100;
-    tempDate = tempDate / 100;
-    month = tempDate % 100;
-    year = tempDate / 100;
-}
 
-class timeClass{
-    public:
-    int minutes;
-    int hours;
-};
 
 class phoneCall{
     private:
-    int reciver;
-    int caller;
-    int dateData;
+    long long int reciver;
+    long long int caller;
+    time_t epochTime;
     dateClass date;
-    int timeData;
-    timeClass time;
     int duration;
     
 
     public:
     void getData(string file, int index);
     void printInfo();
-    void getYYMMDD();
-    void formatTime();
+    void epochToDate();
+
+    //copy functions, return caller, duration etc etc..
     int copyCaller();
     int copyDuration();
-    int copyDate();
+    int copyEpochTime();
 };
 
 
@@ -82,10 +65,9 @@ void phoneCall::getData(string file, int index){
         count++;
     }
 
-    myFile >> caller >> c >> reciver >> c >> duration >> c >> dateData >> c >> timeData >> c;
+    myFile >> caller >> c >> reciver >> c >> epochTime >> c >> duration >> c;
 
-    getYYMMDD();
-    formatTime();
+    epochToDate();
     myFile.close();
 
 }
@@ -94,22 +76,19 @@ void phoneCall::printInfo(){
     cout << "caller: " << caller << endl;
     cout << "reciver: " << reciver << endl;
     cout << "call duration: " << duration << endl;
-    cout << "date: " << date.day << "/" << date.month << "-" << date.year << endl;
-    cout << "time: " << time.hours << ":" << time.minutes << endl;
+    cout << "date: " << date.year << "-" << date.month << "-" << date.day << endl;
+    cout << "_____________________________________________________________" << endl;
+
 }
 
-void phoneCall::getYYMMDD(){
-    int tempDate = dateData;
-    date.day = tempDate % 100;
-    tempDate = tempDate / 100;
-    date.month = tempDate % 100;
-    date.year = tempDate / 100;
-}
+void phoneCall::epochToDate(){
+    struct tm localTime;
+    localTime = *localtime(&epochTime);
 
-void phoneCall::formatTime(){
-    int tempTime = timeData;
-    time.minutes = tempTime % 100;
-    time.hours = tempTime / 100;
+
+    date.day = localTime.tm_mday;
+    date.month = localTime.tm_mon + 1;
+    date.year = localTime.tm_year + 1900;
 }
 
 int phoneCall::copyCaller(){
@@ -120,8 +99,8 @@ int phoneCall::copyDuration(){
     return duration;
 }
 
-int phoneCall::copyDate(){
-    return dateData;
+int phoneCall::copyEpochTime(){
+    return epochTime;
 }
 
 #endif
