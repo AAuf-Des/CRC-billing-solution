@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Program",
+            "type": "shell",
+            "command" : "mingw32-make",
+            "args":[
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault":true
+            }
+        }
+    ]
+}
