@@ -35,9 +35,11 @@ class phoneCall{
     
 
     public:
+    long long int pCaller;
     void getData(string file, int index);
     void printInfo();
     void epochToDate();
+    
 
     //copy functions, return caller, duration etc etc..
     int copyCaller();
@@ -59,6 +61,8 @@ void phoneCall::getData(string file, int index){
     }
 
     myFile >> caller >> c >> reciver >> c >> epochTime >> c >> duration >> c;
+
+    pCaller = caller;
 
     epochToDate();
     myFile.close();

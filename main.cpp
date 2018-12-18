@@ -2,6 +2,8 @@
 #include <ctime>
 #include <string>
 #include <fstream>
+#include <algorithm>
+#include <vector>
 #include "class.h"
 
 using namespace std;
@@ -13,7 +15,9 @@ int countLines(string file);
 int main()
 {
     int linesAmount = countLines(file);
-    phoneCall *call = new phoneCall[linesAmount];
+    //phoneCall *call = new phoneCall[linesAmount];
+    vector<phoneCall> call(linesAmount);
+
 
     for (int i = 0; i < linesAmount; i++){
         call[i].getData(file, i);
@@ -24,7 +28,18 @@ int main()
         call[i].printInfo();
     }
 
+    //sorting algorithm
+    sort(call.begin(), call.end(), [ ]( const auto& left, const auto& right )
+    {
+        return left.pCaller < right.pCaller;
+    });
 
+    system("pause");
+
+    cout << "calls after sort" << endl;
+    for (int i = 0; i < linesAmount; i++){
+        call[i].printInfo();
+    }  
     
     return 0;
 }
