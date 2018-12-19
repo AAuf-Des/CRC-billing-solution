@@ -41,16 +41,27 @@ struct dateStr{
     }
 };
 
+
+//invoice class
 class invoice{
     private:
     long long int number;
 
     public:
     dateStr lastDates[3];
-    void getNumber(long long int x);
+    int yearMonthValue[3];
 
+    int totalDurationPerMonth[3];
+    void getNumber(long long int x);
     void printInfo();
+    void getYearMonthValue();
 };
+
+void invoice::getYearMonthValue(){
+    yearMonthValue[0] = (lastDates[0].year * 100) + lastDates[0].month;
+    yearMonthValue[1] = (lastDates[1].year * 100) + lastDates[1].month;
+    yearMonthValue[2] = (lastDates[2].year * 100) + lastDates[2].month;
+}
 
 void invoice::getNumber(long long int x){
     number = x;
@@ -61,10 +72,14 @@ void invoice::printInfo(){
     lastDates[0].printDate();
     lastDates[1].printDate();
     lastDates[2].printDate();
+    cout << endl;
+    cout << "yearMonthValues: " << yearMonthValue[0] << ", " << yearMonthValue[1] << ", " << yearMonthValue[2] << endl;
     cout << "________________________" << endl;
 }
 
 
+
+//phonecall class
 class phoneCall{
     private:
     long long int reciver;
@@ -76,9 +91,11 @@ class phoneCall{
 
     public:
     long long int pCaller;
+    int yearMonthValue;
     void getData(string file, int index);
     void printInfo();
     void epochToDate();
+    void getYearMonthValue();
     
 
     //copy functions, return caller, duration etc etc..
@@ -89,6 +106,10 @@ class phoneCall{
     int copyYear();
 };
 
+
+void phoneCall::getYearMonthValue(){
+    yearMonthValue = (date.year * 100) + date.month;
+}
 
 void phoneCall::getData(string file, int index){
     int count = 0;
@@ -107,6 +128,7 @@ void phoneCall::getData(string file, int index){
     pCaller = caller;
 
     epochToDate();
+    getYearMonthValue();
     myFile.close();
 
 }
@@ -116,6 +138,7 @@ void phoneCall::printInfo(){
     cout << "reciver: " << reciver << endl;
     cout << "call duration: " << duration << endl;
     cout << "date: " << date.year << "-" << date.month << "-" << date.day << endl;
+    cout << "YYYYMM int format: " << yearMonthValue << endl;
     cout << "_____________________________________________________________" << endl;
 
 }

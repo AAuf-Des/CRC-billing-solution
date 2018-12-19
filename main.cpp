@@ -30,6 +30,12 @@ int main()
         return left.pCaller < right.pCaller;
     });
 
+    for (int i = 0; i < linesAmount; i++){              //print all phonecalls, delete before relese
+        call[i].printInfo();
+    }
+
+    system("pause");
+
     int amountOfCallers = countAmountOfCallers(call, linesAmount);
     invoice *invoiceArray = new invoice[amountOfCallers];
 
@@ -47,11 +53,19 @@ int main()
         for (int j = 0; j < 3; j++){
             invoiceArray[i].lastDates[j] = lastDatesInCdr[j];
         }
+        invoiceArray[i].getYearMonthValue();
     }
-
+    
     for (int i = 0; i < amountOfCallers; i++){
         invoiceArray[i].printInfo();
     }
+
+    
+
+    
+
+
+    
 
 
 
