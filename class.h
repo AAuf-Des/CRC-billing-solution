@@ -7,25 +7,12 @@
 #include <ctime>
 using namespace std;
 
-class invoice{
-    private:
-    long long int number;
-    int totalMins;
-    public:
-    void getNumber(long long int x);
-};
 
-void invoice::getNumber(long long int x){
-    number = x;
-}
-
-
-struct dateStruct{
+struct dateStr{
     public:
     int day;
     int month;
     int year;
-
     time_t epochTime;
 
     void epochToDate()
@@ -54,13 +41,36 @@ struct dateStruct{
     }
 };
 
+class invoice{
+    private:
+    long long int number;
+
+    public:
+    dateStr lastDates[3];
+    void getNumber(long long int x);
+
+    void printInfo();
+};
+
+void invoice::getNumber(long long int x){
+    number = x;
+}
+
+void invoice::printInfo(){
+    cout << "MSISDN: " << number << endl;
+    lastDates[0].printDate();
+    lastDates[1].printDate();
+    lastDates[2].printDate();
+    cout << "________________________" << endl;
+}
+
 
 class phoneCall{
     private:
     long long int reciver;
     long long int caller;
     time_t epochTime;
-    dateStruct date;
+    dateStr date;
     int duration;
     
 
@@ -75,6 +85,8 @@ class phoneCall{
     long long int copyCaller();
     int copyDuration();
     int copyEpochTime();
+    int copyMonth();
+    int copyYear();
 };
 
 
@@ -128,6 +140,14 @@ int phoneCall::copyDuration(){
 
 int phoneCall::copyEpochTime(){
     return epochTime;
+}
+
+int phoneCall::copyMonth(){
+    return date.month;
+}
+    
+int phoneCall::copyYear(){
+    return date.year;
 }
 
 #endif

@@ -35,18 +35,25 @@ int main()
 
     assignNumbersToInvoices(call, invoiceArray, linesAmount);
 
-    dateStruct lastDatesInCdr[3];
-
-    time_t epochTime = 1547156444;//getLastDate(call, linesAmount);
+    dateStr lastDatesInCdr[3];
+    time_t epochTime = getLastDate(call, linesAmount);
     struct tm readTime;
     readTime = *localtime(&epochTime);
     lastDatesInCdr[0].assignDate(readTime, 1);
     lastDatesInCdr[1].assignDate(readTime, 0);
     lastDatesInCdr[2].assignDate(readTime, -1);
 
-    lastDatesInCdr[0].printDate();
-    lastDatesInCdr[1].printDate();
-    lastDatesInCdr[2].printDate();
+    for (int i = 0; i < amountOfCallers; i++){
+        for (int j = 0; j < 3; j++){
+            invoiceArray[i].lastDates[j] = lastDatesInCdr[j];
+        }
+    }
+
+    for (int i = 0; i < amountOfCallers; i++){
+        invoiceArray[i].printInfo();
+    }
+
+
 
     return 0;
 }
