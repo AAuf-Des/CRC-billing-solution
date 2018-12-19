@@ -1,6 +1,5 @@
 #ifndef CLASS_H
 #define CLASS_H
-
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -42,6 +41,7 @@ struct dateStr{
 };
 
 
+
 //invoice class
 class invoice{
     private:
@@ -50,11 +50,13 @@ class invoice{
     public:
     dateStr lastDates[3];
     int yearMonthValue[3];
-
     int totalDurationPerMonth[3];
+    
     void getNumber(long long int x);
     void printInfo();
     void getYearMonthValue();
+
+    long long int copyNumber();
 };
 
 void invoice::getYearMonthValue(){
@@ -75,6 +77,10 @@ void invoice::printInfo(){
     cout << endl;
     cout << "yearMonthValues: " << yearMonthValue[0] << ", " << yearMonthValue[1] << ", " << yearMonthValue[2] << endl;
     cout << "________________________" << endl;
+}
+
+long long int invoice::copyNumber(){
+    return number;
 }
 
 

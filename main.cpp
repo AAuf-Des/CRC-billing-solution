@@ -5,16 +5,21 @@
 #include <algorithm>
 #include <vector>
 #include "class.h"
+#include "declarations.h"
 
 using namespace std;
 
 const string file = "cdrDiv.txt";
 
 int countLines(string file);
+
 int countAmountOfCallers(vector<phoneCall> call, int amountOfLines);
+
 void assignNumbersToInvoices(vector<phoneCall> call, invoice invoiceArray[], int amountOfLines);
+
 time_t getLastDate(vector<phoneCall> call, int amountOfLines);
     
+
 
 int main()
 {
@@ -55,19 +60,12 @@ int main()
         }
         invoiceArray[i].getYearMonthValue();
     }
+
     
-    for (int i = 0; i < amountOfCallers; i++){
+
+    for (int i = 0; i < amountOfCallers; i++){                      //print all invoice info,delete before release
         invoiceArray[i].printInfo();
     }
-
-    
-
-    
-
-
-    
-
-
 
     return 0;
 }
@@ -118,3 +116,4 @@ time_t getLastDate(vector<phoneCall> call, int amountOfLines){
     }
     return lastDate;
 }
+
