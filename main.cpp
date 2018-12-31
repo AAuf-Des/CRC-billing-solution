@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <vector>
 #include "class.h"
-#include "InvoiceClass.h"
 
 using namespace std;
 
@@ -18,7 +17,7 @@ int countAmountOfCallers(vector<phoneCall> call, int amountOfLines);
 void assignNumbersToInvoices(vector<phoneCall> call, invoice invoiceArray[], int amountOfLines);
 
 time_t getLastDate(vector<phoneCall> call, int amountOfLines);
-    
+
 
 
 int main()
