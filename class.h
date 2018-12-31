@@ -41,7 +41,6 @@ struct dateStr{
 };
 
 
-
 //invoice class
 class invoice{
     private:
@@ -82,7 +81,6 @@ void invoice::printInfo(){
 long long int invoice::copyNumber(){
     return number;
 }
-
 
 
 //phonecall class

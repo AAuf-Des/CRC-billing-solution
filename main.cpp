@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include "class.h"
-#include "declarations.h"
+#include "InvoiceClass.h"
 
 using namespace std;
 
