@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const string file = "CdrMonth.txt";
+const string file = "CdrTot.txt";
 
 int countLines(string file);
 
@@ -58,31 +58,12 @@ int main()
 
     setInvoiceMonths(invoiceArray, call, amountOfMonths, linesAmount, amountOfCallers);
 
-    for (int i = 0; i < amountOfCallers; i++){
-        invoiceArray[i].printInfo();
-    }
-
-
-
-
-
-    system("pause");
-
-
-    /*
-    for (int i = 0; i < amountOfCallers; i++){
-        for (int j = 0; j < 3; j++){
-            invoiceArray[i].lastDates[j] = lastDatesInCdr[j];
-        }
-        invoiceArray[i].getYearMonthValue();
-    }
-
     //getting total durations from all phonecalls to last 3 months 
     for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
-        for (int lastDateIteration = 0; lastDateIteration < 3; lastDateIteration++){
+        for (int dateIteration = 0; dateIteration < amountOfMonths; dateIteration++){
             for (int callIteration = 0; callIteration < linesAmount; callIteration++){
-                if (call[callIteration].copyCaller() == invoiceArray[invoiceIteration].copyNumber() && call[callIteration].yearMonthValue == invoiceArray[invoiceIteration].yearMonthValue[lastDateIteration]){
-                    invoiceArray[invoiceIteration].totalDurationPerMonth[lastDateIteration] += call[callIteration].copyDuration();
+                if (call[callIteration].copyCaller() == invoiceArray[invoiceIteration].copyNumber() && call[callIteration].yearMonthValue == invoiceArray[invoiceIteration].yearMonthValue[dateIteration]){
+                    invoiceArray[invoiceIteration].totalDurationPerMonth[dateIteration] += call[callIteration].copyDuration();
                 }
             }
         }
@@ -93,7 +74,7 @@ int main()
     for (int i = 0; i < amountOfCallers; i++){                      //print all invoice info,delete before release
         invoiceArray[i].printInfo();
     }
-    */
+    
 
     return 0;
 }
@@ -145,7 +126,6 @@ int calculateAmountOfMonths(vector<phoneCall> call, int linesAmount){
 
     int totalMonths = (yearsAppart * 12) + monthsAppart + 1;
 
-
     return totalMonths;
 }
 
@@ -187,8 +167,11 @@ void setInvoiceMonths(vector<invoice> &invoiceArray, vector<phoneCall> call, int
 
             invoiceArray[invoiceIteration].invoiceDates[monthIteration].tm_year += 1900;
             invoiceArray[invoiceIteration].invoiceDates[monthIteration].tm_mon += 1;
-            //invoiceArray[invoiceIteration].invoiceDates[monthIteration].tm_mday = 15;
             tempMonth += oneMonth;
+
+            invoiceArray[invoiceIteration].getYearMonthValue();
+            invoiceArray[invoiceIteration].totalDurationPerMonth[monthIteration] = 0;
+
         }
         tempMonth = first;
     }

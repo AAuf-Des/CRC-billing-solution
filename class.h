@@ -23,9 +23,6 @@ class invoice{
     void setAmountOfMonths(int amountOfMonths);
     void getYearMonthValue();
     void printInfo();
-    void printSize(){
-        cout << invoiceDates.size() << endl;
-    }
 
     long long int copyNumber();
 
@@ -40,7 +37,9 @@ void invoice::setAmountOfMonths(int amountOfMonths){
 
 
 void invoice::getYearMonthValue(){
-    cout << "hello" << endl; // fix
+    for (int i = 0; i < invoiceDates.size(); i++){
+        yearMonthValue[i] = (invoiceDates[i].tm_year * 100) + invoiceDates[i].tm_mon;
+    }
 }
 
 void invoice::setNumber(long long int x){
@@ -54,7 +53,7 @@ long long int invoice::copyNumber(){
 void invoice::printInfo(){
     cout << "MSIDN: " << number << endl;
     for (int i = 0; i < invoiceDates.size(); i++){
-        cout << "date # " << i << " " << invoiceDates[i].tm_year << "-" << invoiceDates[i].tm_mon << "-" << invoiceDates[i].tm_mday << endl;
+        cout << yearMonthValue[i] << " - " << totalDurationPerMonth[i] << endl;
     }
     cout << "__________________________" << endl;
 }
