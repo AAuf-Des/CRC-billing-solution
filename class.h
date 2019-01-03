@@ -4,41 +4,9 @@
 #include <string>
 #include <fstream>
 #include <ctime>
+#include <vector>
 using namespace std;
 
-
-struct dateStr{
-    public:
-    int day;
-    int month;
-    int year;
-    time_t epochTime;
-
-    void epochToDate()
-    {
-        struct tm localTime;
-        localTime = *localtime(&epochTime);
-        day = localTime.tm_mday;
-        month = localTime.tm_mon + 1;
-        year = localTime.tm_year + 1900;
-    }
-
-    //used to asign dates
-    void assignDate(struct tm readTime, int x){
-        day = 1;
-        month = readTime.tm_mon + x;
-        year = readTime.tm_year + 1900;
-        if (month <= 0){
-            month = month + 12;
-            year = year - 1;
-        }
-
-    }
-
-    void printDate(){
-        cout << year << "-" << month << "-" << day << endl;
-    }
-};
 
 
 //invoice class
@@ -47,39 +15,54 @@ class invoice{
     long long int number;
 
     public:
-    dateStr lastDates[3];
-    int yearMonthValue[3];
-    int totalDurationPerMonth[3] = {0,0,0};
+    vector<struct tm> invoiceDates;
+    vector<int> totalDurationPerMonth;
+    vector<int> yearMonthValue;
     
-    void getNumber(long long int x);
-    void printInfo();
+    void setNumber(long long int x);
+    void setAmountOfMonths(int amountOfMonths);
     void getYearMonthValue();
+    void printInfo();
+    void printSize(){
+        cout << invoiceDates.size() << endl;
+    }
 
     long long int copyNumber();
+
+
 };
 
+void invoice::setAmountOfMonths(int amountOfMonths){
+    invoiceDates.resize(amountOfMonths);
+    totalDurationPerMonth.resize(amountOfMonths);
+    yearMonthValue.resize(amountOfMonths);
+}
+
+
 void invoice::getYearMonthValue(){
-    yearMonthValue[0] = (lastDates[0].year * 100) + lastDates[0].month;
-    yearMonthValue[1] = (lastDates[1].year * 100) + lastDates[1].month;
-    yearMonthValue[2] = (lastDates[2].year * 100) + lastDates[2].month;
+    cout << "hello" << endl; // fix
 }
 
-void invoice::getNumber(long long int x){
+void invoice::setNumber(long long int x){
     number = x;
-}
-
-void invoice::printInfo(){
-    cout << "MSISDN: " << number << endl;
-    cout << yearMonthValue[0] << ": " << totalDurationPerMonth[0] << endl;
-    cout << yearMonthValue[1] << ": " << totalDurationPerMonth[1] << endl;
-    cout << yearMonthValue[2] << ": " << totalDurationPerMonth[2] << endl;
-    cout << endl;
-    cout << "________________________" << endl;
 }
 
 long long int invoice::copyNumber(){
     return number;
 }
+
+void invoice::printInfo(){
+    cout << "MSIDN: " << number << endl;
+    for (int i = 0; i < invoiceDates.size(); i++){
+        cout << "date # " << i << " " << invoiceDates[i].tm_year << "-" << invoiceDates[i].tm_mon << "-" << invoiceDates[i].tm_mday << endl;
+    }
+    cout << "__________________________" << endl;
+}
+
+
+
+
+
 
 
 //phonecall class
@@ -88,31 +71,26 @@ class phoneCall{
     long long int reciver;
     long long int caller;
     time_t epochTime;
-    dateStr date;
+    struct tm date;
     int duration;
     
 
     public:
-    long long int pCaller;
+    long long int publicNumber;     //fix this, needed for lamba function
     int yearMonthValue;
     void getData(string file, int index);
     void printInfo();
-    void epochToDate();
     void getYearMonthValue();
+    void epochToDate();
     
 
     //copy functions, return caller, duration etc etc..
     long long int copyCaller();
     int copyDuration();
     int copyEpochTime();
-    int copyMonth();
-    int copyYear();
 };
 
 
-void phoneCall::getYearMonthValue(){
-    yearMonthValue = (date.year * 100) + date.month;
-}
 
 void phoneCall::getData(string file, int index){
     int count = 0;
@@ -128,33 +106,33 @@ void phoneCall::getData(string file, int index){
 
     myFile >> caller >> c >> reciver >> c >> epochTime >> c >> duration >> c;
 
-    pCaller = caller;
-
+    publicNumber = caller;
     epochToDate();
     getYearMonthValue();
     myFile.close();
+}
 
+void phoneCall::epochToDate(){
+    date = *gmtime(&epochTime);
+
+    date.tm_mon += 1;
+    date.tm_year += 1900;
+}
+
+void phoneCall::getYearMonthValue(){
+    yearMonthValue = (date.tm_year * 100) + date.tm_mon;
 }
 
 void phoneCall::printInfo(){
     cout << "caller: " << caller << endl;
     cout << "reciver: " << reciver << endl;
     cout << "call duration: " << duration << endl;
-    cout << "date: " << date.year << "-" << date.month << "-" << date.day << endl;
+    cout << "date: " << date.tm_year << "-" << date.tm_mon << "-" << date.tm_mday << endl;
     cout << "YYYYMM int format: " << yearMonthValue << endl;
     cout << "_____________________________________________________________" << endl;
 
 }
 
-void phoneCall::epochToDate(){
-    struct tm localTime;
-    localTime = *localtime(&epochTime);
-
-
-    date.day = localTime.tm_mday;
-    date.month = localTime.tm_mon + 1;
-    date.year = localTime.tm_year + 1900;
-}
 
 long long int phoneCall::copyCaller(){
     return caller;
@@ -168,12 +146,5 @@ int phoneCall::copyEpochTime(){
     return epochTime;
 }
 
-int phoneCall::copyMonth(){
-    return date.month;
-}
-    
-int phoneCall::copyYear(){
-    return date.year;
-}
 
 #endif
