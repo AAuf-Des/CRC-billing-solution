@@ -60,6 +60,7 @@ int main()
         invoiceArray[i].getYearMonthValue();
     }
 
+    //getting total durations from all phonecalls to last 3 months 
     for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
         for (int lastDateIteration = 0; lastDateIteration < 3; lastDateIteration++){
             for (int callIteration = 0; callIteration < linesAmount; callIteration++){
