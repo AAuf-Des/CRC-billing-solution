@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const string file = "cdrDiv.txt";
+const string file = "CdrTot.txt";
 
 int countLines(string file);
 
@@ -58,6 +58,16 @@ int main()
             invoiceArray[i].lastDates[j] = lastDatesInCdr[j];
         }
         invoiceArray[i].getYearMonthValue();
+    }
+
+    for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
+        for (int lastDateIteration = 0; lastDateIteration < 3; lastDateIteration++){
+            for (int callIteration = 0; callIteration < linesAmount; callIteration++){
+                if (call[callIteration].copyCaller() == invoiceArray[invoiceIteration].copyNumber() && call[callIteration].yearMonthValue == invoiceArray[invoiceIteration].yearMonthValue[lastDateIteration]){
+                    invoiceArray[invoiceIteration].totalDurationPerMonth[lastDateIteration] += call[callIteration].copyDuration();
+                }
+            }
+        }
     }
 
     

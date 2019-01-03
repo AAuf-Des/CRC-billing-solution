@@ -49,7 +49,7 @@ class invoice{
     public:
     dateStr lastDates[3];
     int yearMonthValue[3];
-    int totalDurationPerMonth[3];
+    int totalDurationPerMonth[3] = {0,0,0};
     
     void getNumber(long long int x);
     void printInfo();
@@ -70,11 +70,10 @@ void invoice::getNumber(long long int x){
 
 void invoice::printInfo(){
     cout << "MSISDN: " << number << endl;
-    lastDates[0].printDate();
-    lastDates[1].printDate();
-    lastDates[2].printDate();
+    cout << yearMonthValue[0] << ": " << totalDurationPerMonth[0] << endl;
+    cout << yearMonthValue[1] << ": " << totalDurationPerMonth[1] << endl;
+    cout << yearMonthValue[2] << ": " << totalDurationPerMonth[2] << endl;
     cout << endl;
-    cout << "yearMonthValues: " << yearMonthValue[0] << ", " << yearMonthValue[1] << ", " << yearMonthValue[2] << endl;
     cout << "________________________" << endl;
 }
 
