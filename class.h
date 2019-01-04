@@ -18,16 +18,50 @@ class invoice{
     vector<struct tm> invoiceDates;
     vector<int> totalDurationPerMonth;
     vector<int> yearMonthValue;
+    int totalDuration = 0;
     
     void setNumber(long long int x);
     void setAmountOfMonths(int amountOfMonths);
     void getYearMonthValue();
+    void setTotal();
     void printInfo();
+
+    void toJson(string outputFile, bool isLast);
 
     long long int copyNumber();
 
 
 };
+
+void invoice::toJson(string outputFile, bool isLast){
+    ofstream myFile;
+    myFile.open(outputFile, std::ios::app);
+
+    myFile << "\t {" << endl;
+    myFile << "\t\"MSIDN\":\" " << number << "\"," << endl;
+    for (int i = 0; i < invoiceDates.size(); i++){
+        myFile << "\t  \"" << invoiceDates[i].tm_year << "-" << invoiceDates[i].tm_mon << "\" :";
+        myFile << totalDurationPerMonth[i] << "," << endl;
+    }
+    myFile << "\t  \"Total\": " << totalDuration << endl;
+
+    if (isLast == true){
+        myFile << "\t }" << endl;
+    }
+    else {
+        myFile << "\t }," << endl;
+    }
+
+    
+
+    myFile.close();
+}
+
+void invoice::setTotal(){
+    for (int i = 0; i < invoiceDates.size(); i++){
+        totalDuration = totalDuration + totalDurationPerMonth[i];
+    }
+}
 
 void invoice::setAmountOfMonths(int amountOfMonths){
     invoiceDates.resize(amountOfMonths);
@@ -53,8 +87,9 @@ long long int invoice::copyNumber(){
 void invoice::printInfo(){
     cout << "MSIDN: " << number << endl;
     for (int i = 0; i < invoiceDates.size(); i++){
-        cout << yearMonthValue[i] << " - " << totalDurationPerMonth[i] << endl;
+        cout << invoiceDates[i].tm_year << " " << invoiceDates[i].tm_mon << " - " << totalDurationPerMonth[i] << endl;
     }
+    cout << "total Duration: " << totalDuration << endl;
     cout << "__________________________" << endl;
 }
 

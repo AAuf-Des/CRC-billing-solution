@@ -9,6 +9,8 @@
 using namespace std;
 
 const string file = "CdrTot.txt";
+const string outputFile = "invoices.json";
+
 
 int countLines(string file);
 
@@ -23,6 +25,8 @@ time_t getLastDate(vector<phoneCall> call, int amountOfLines);
 time_t getFirstDate(vector<phoneCall> call, int amountOfLines);
 
 void setInvoiceMonths(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfMonths, int amountOfLines, int amountOfCallers);
+
+void createInvoice(vector<invoice> invoiceArray, string outputFile);
 
 
 
@@ -44,7 +48,7 @@ int main()
         call[i].printInfo();
     }
 
-    system("pause");
+
 
 
     int amountOfCallers = countAmountOfCallers(call, linesAmount);
@@ -67,19 +71,19 @@ int main()
                 }
             }
         }
+        invoiceArray[invoiceIteration].setTotal();
     }
-
-    
 
     for (int i = 0; i < amountOfCallers; i++){                      //print all invoice info,delete before release
         invoiceArray[i].printInfo();
     }
-    
+
+    system("pause");
+
+    createInvoice(invoiceArray, outputFile);
 
     return 0;
 }
-
-
 
 int countLines(string file){
     int count = 0;
@@ -161,7 +165,7 @@ void setInvoiceMonths(vector<invoice> &invoiceArray, vector<phoneCall> call, int
 
     for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
         invoiceArray[invoiceIteration].setAmountOfMonths(amountOfMonths);
-
+        
         for(int monthIteration = 0; monthIteration < amountOfMonths; monthIteration++){
             invoiceArray[invoiceIteration].invoiceDates[monthIteration] = *gmtime(&tempMonth);
 
@@ -175,5 +179,27 @@ void setInvoiceMonths(vector<invoice> &invoiceArray, vector<phoneCall> call, int
         }
         tempMonth = first;
     }
+}
+
+void createInvoice(vector<invoice> invoiceArray, string outputFile ){
+    ofstream myFile;
+    myFile.open(outputFile);
+    myFile << "{" << endl;
+    myFile << "\t\"Invoices\":[" << endl;
+    myFile.close();
+
+    bool isLast = false;
+    for (int i = 0; i < invoiceArray.size(); i++){
+        if (i == invoiceArray.size() - 1)
+            isLast = true;
+
+        invoiceArray[i].toJson(outputFile, isLast);
+    }
+
+    myFile.open(outputFile, std::ios::app);
+    myFile << "\t]" << endl;
+    myFile << "\t}" << endl;
+
+    myFile.close();
 }
 
