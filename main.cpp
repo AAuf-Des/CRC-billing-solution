@@ -58,7 +58,7 @@ int main()
 
     setInvoiceMonths(invoiceArray, call, amountOfMonths, linesAmount, amountOfCallers);
 
-    //getting total durations from all phonecalls to last 3 months 
+    
     for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
         for (int dateIteration = 0; dateIteration < amountOfMonths; dateIteration++){
             for (int callIteration = 0; callIteration < linesAmount; callIteration++){
