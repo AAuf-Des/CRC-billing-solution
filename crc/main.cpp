@@ -13,7 +13,7 @@ using namespace std;
 int main(int argc, const char * argv[])
 {
     if (argc != 5){
-        cout << "error: not enough arguments" << endl;
+        cout << "error: invalid amount of arguments" << endl;
         exit(EXIT_FAILURE);
     }
     const string outputFile = fixOutputName(argv);
@@ -27,9 +27,6 @@ int main(int argc, const char * argv[])
 
     const double payPerCall = atof(argv[3]);
     const double payPerMinute = atof(argv[4]);
-
-    cout << "pay per Minute" << payPerMinute << endl;
-    system("pause");
 
     int linesAmount = countLines(inputFile);                                    //counts amount of lines on cdr file i.e. how many calls the cdr contains.
     vector<phoneCall> call (linesAmount);
@@ -48,14 +45,6 @@ int main(int argc, const char * argv[])
     vector <invoice> invoiceArray(amountOfCallers);                             //create 1 invoice object for each caller (uniqe phonenumber) on the cdr
 
     setupInvoices(invoiceArray, call, linesAmount, amountOfCallers, payPerCall, payPerMinute);
-
-    for (int i = 0; i < linesAmount; i++){
-        call[i].printInfo();
-    }
-
-    for (int i = 0; i < amountOfCallers; i++){
-        invoiceArray[i].printInfo();
-    } 
 
     createInvoice(invoiceArray, outputFile);
 

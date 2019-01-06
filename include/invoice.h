@@ -21,7 +21,6 @@ class invoice{
     int amountOfCalls = 0;
     int totalStartPrice;
     double totalTimePrice;
-
     double totalPrice;
 
     
