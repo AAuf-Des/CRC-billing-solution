@@ -47,15 +47,13 @@ int main(int argc, const char * argv[])
     for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
         for (int dateIteration = 0; dateIteration < amountOfMonths; dateIteration++){
             for (int callIteration = 0; callIteration < linesAmount; callIteration++){
-                if (call[callIteration].copyCaller() == invoiceArray[invoiceIteration].copyNumber() && call[callIteration].yearMonthValue == invoiceArray[invoiceIteration].copyYearMonthValue(dateIteration)){
+                if (call[callIteration].copyCaller() == invoiceArray[invoiceIteration].copyNumber() && call[callIteration].copyYearMonthValue() == invoiceArray[invoiceIteration].copyYearMonthValue(dateIteration)){
                     invoiceArray[invoiceIteration].addTotalDurationPerMonth(dateIteration, call[callIteration].copyDuration());
                 }
             }
         }
         invoiceArray[invoiceIteration].setTotalDuration();
     }
-
-    system("pause");
 
     createInvoice(invoiceArray, outputFile);
 

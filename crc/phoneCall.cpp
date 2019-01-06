@@ -21,7 +21,7 @@ void phoneCall::getData(string file, int index){
 
     publicNumber = caller;
     epochToDate();
-    getYearMonthValue();
+    setYearMonthValue();
     myFile.close();
 }
 
@@ -32,20 +32,9 @@ void phoneCall::epochToDate(){
     date.tm_year += 1900;
 }
 
-void phoneCall::getYearMonthValue(){
+void phoneCall::setYearMonthValue(){
     yearMonthValue = (date.tm_year * 100) + date.tm_mon;
 }
-
-void phoneCall::printInfo(){
-    cout << "caller: " << caller << endl;
-    cout << "reciver: " << reciver << endl;
-    cout << "call duration: " << duration << endl;
-    cout << "date: " << date.tm_year << "-" << date.tm_mon << "-" << date.tm_mday << endl;
-    cout << "YYYYMM int format: " << yearMonthValue << endl;
-    cout << "_____________________________________________________________" << endl;
-
-}
-
 
 long long int phoneCall::copyCaller(){
     return caller;
@@ -57,4 +46,8 @@ int phoneCall::copyDuration(){
 
 int phoneCall::copyEpochTime(){
     return epochTime;
+}
+
+int phoneCall::copyYearMonthValue(){
+    return yearMonthValue;
 }
