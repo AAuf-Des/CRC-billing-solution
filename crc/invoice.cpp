@@ -31,7 +31,7 @@ void invoice::toJson(string outputFile, bool isLast){
     myFile.close();
 }
 
-void invoice::setTotal(){
+void invoice::setTotalDuration(){
     for (int i = 0; i < invoiceDates.size(); i++){
         totalDuration = totalDuration + totalDurationPerMonth[i];
     }
@@ -50,19 +50,39 @@ void invoice::getYearMonthValue(){
     }
 }
 
+void invoice::setTotalDurationPerMonth(int monthIndex, int durationThatMonth){
+    totalDurationPerMonth[monthIndex] = durationThatMonth;
+}
+
+void invoice::addTotalDurationPerMonth(int monthIndex, int addedDuration){
+    totalDurationPerMonth[monthIndex] += addedDuration;
+}
+
+void invoice::setTmDate(int monthIndex ,time_t tempMonth){
+    invoiceDates[monthIndex] = *gmtime(&tempMonth);
+
+    invoiceDates[monthIndex].tm_year += 1900;
+    invoiceDates[monthIndex].tm_mon += 1;
+
+    getYearMonthValue();
+}
+
 void invoice::setNumber(long long int x){
     number = x;
 }
 
+
+
+
+//getter
 long long int invoice::copyNumber(){
     return number;
 }
 
-void invoice::printInfo(){
-    cout << "MSIDN: " << number << endl;
-    for (int i = 0; i < invoiceDates.size(); i++){
-        cout << invoiceDates[i].tm_year << " " << invoiceDates[i].tm_mon << " - " << totalDurationPerMonth[i] << endl;
-    }
-    cout << "total Duration: " << totalDuration << endl;
-    cout << "__________________________" << endl;
+int invoice::copyYearMonthValue(int monthIndex){
+    return yearMonthValue[monthIndex];
+}
+
+int invoice::copyTotalDurationPerMonth(int monthIndex){
+    return totalDurationPerMonth[monthIndex];
 }

@@ -158,24 +158,25 @@ time_t getFirstDate(vector<phoneCall> call, int amountOfLines){
 void setInvoiceMonths(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfMonths, int amountOfLines, int amountOfCallers){
     time_t first = getFirstDate(call, amountOfLines);
     time_t last = getLastDate(call, amountOfLines);
-    long long int diff = difftime(last, first);
     const time_t oneMonth = 2628000;
 
-    time_t tempMonth = first;
+    struct tm firstDateMidMonth = *gmtime(&first);
+    firstDateMidMonth.tm_mday = 15;
+    time_t tempMonth = mktime(&firstDateMidMonth);                          //setting the first date in cdr to the same year and month but on 15th day of that month
+
+
 
     for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
         invoiceArray[invoiceIteration].setAmountOfMonths(amountOfMonths);
         
         for(int monthIteration = 0; monthIteration < amountOfMonths; monthIteration++){
-            invoiceArray[invoiceIteration].invoiceDates[monthIteration] = *gmtime(&tempMonth);
 
-            invoiceArray[invoiceIteration].invoiceDates[monthIteration].tm_year += 1900;
-            invoiceArray[invoiceIteration].invoiceDates[monthIteration].tm_mon += 1;
+            invoiceArray[invoiceIteration].setTmDate(monthIteration, tempMonth);
+            
             tempMonth += oneMonth;
 
-            invoiceArray[invoiceIteration].getYearMonthValue();
-            invoiceArray[invoiceIteration].totalDurationPerMonth[monthIteration] = 0;
-
+            invoiceArray[invoiceIteration].setTotalDurationPerMonth(monthIteration, 0);
+            
         }
         tempMonth = first;
     }

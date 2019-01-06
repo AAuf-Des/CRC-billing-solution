@@ -10,22 +10,29 @@ using namespace std;
 class invoice{
     private:
     long long int number;
-
-    public:
-    vector<struct tm> invoiceDates;
-    vector<int> totalDurationPerMonth;
     vector<int> yearMonthValue;
+    vector<int> totalDurationPerMonth;
+    vector<struct tm> invoiceDates;
     int totalDuration = 0;
     
+
+    public:
+
     void setNumber(long long int x);
     void setAmountOfMonths(int amountOfMonths);
+    void setTotalDurationPerMonth(int monthIndex, int durationThatMonth);
+    void addTotalDurationPerMonth(int monthIndex, int addedDuration);
     void getYearMonthValue();
-    void setTotal();
-    void printInfo();
+    void setTotalDuration();
+    void setTmDate(int monthIndex, time_t tempMonth);
+
 
     void toJson(string outputFile, bool isLast);
 
     long long int copyNumber();
+    int copyYearMonthValue(int monthIndex);
+    int copyTotalDurationPerMonth(int monthIndex);
+    
 
 
 };
