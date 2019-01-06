@@ -6,6 +6,13 @@
 #include "invoice.h"
 using namespace std;
 
+const string fixOutputName(const char * argv[]);
+
+bool checkIfValidArguments(const char * argv[]);
+
+bool checkIfFileExist(const char * argv[]);
+
+bool checkIfValidNumber(const char * argv[], int x);
 
 int countLines(string file);
 

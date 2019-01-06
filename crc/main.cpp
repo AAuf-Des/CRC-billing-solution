@@ -10,17 +10,24 @@
 
 using namespace std;
 
-const string file = "CdrTot.txt";
-const string outputFile = "invoices.json";
-
-
-int main()
+int main(int argc, const char * argv[])
 {
-    int linesAmount = countLines(file);        //counts amount of lines on cdr file i.e. how many calls the cdr contains.
+    const string outputFile = fixOutputName(argv);
+    bool validArguments = checkIfValidArguments(argv);
+
+    const string inputFile = argv[1];
+
+    if (validArguments != true){
+        cout << "program is quitting" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+
+    int linesAmount = countLines(inputFile);        //counts amount of lines on cdr file i.e. how many calls the cdr contains.
     vector<phoneCall> call (linesAmount);
 
     for (int i = 0; i < linesAmount; i++){                                      //gather data to the objects.
-        call[i].getData(file, i);
+        call[i].getData(inputFile, i);
     }
 
     sort(call.begin(), call.end(), [ ]( const auto& left, const auto& right )   //sort phonecalls by phoneNumber, lowest to highest.
@@ -28,21 +35,12 @@ int main()
         return left.publicNumber < right.publicNumber;
     });
 
-    for (int i = 0; i < linesAmount; i++){              //print all phonecalls, delete before relese
-        call[i].printInfo();
-    }
-
-
-
-
     int amountOfCallers = countAmountOfCallers(call, linesAmount);
     vector <invoice> invoiceArray(amountOfCallers);
-
+    
     assignNumbersToInvoices(call, invoiceArray, linesAmount);               //assigning all MSISN numbers to the invoice objects
 
     int amountOfMonths = calculateAmountOfMonths(call, linesAmount);
-
-    cout << "amountOfMonths: " << amountOfMonths << endl;
 
     setInvoiceMonths(invoiceArray, call, amountOfMonths, linesAmount, amountOfCallers);
 
@@ -56,10 +54,6 @@ int main()
             }
         }
         invoiceArray[invoiceIteration].setTotal();
-    }
-
-    for (int i = 0; i < amountOfCallers; i++){                      //print all invoice info,delete before release
-        invoiceArray[i].printInfo();
     }
 
     system("pause");
