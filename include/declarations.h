@@ -8,6 +8,8 @@ using namespace std;
 
 const string fixOutputName(const char * argv[]);
 
+const string fixSmallOutputName(const char * argv[]);
+
 bool checkIfValidArguments(const char * argv[]);
 
 bool checkIfFileExist(const char * argv[]);
@@ -29,6 +31,8 @@ time_t getFirstDate(vector<phoneCall> call, int amountOfLines);
 void setInvoiceMonths(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfMonths, int amountOfLines, int amountOfCallers);
 
 void createInvoice(vector<invoice> &invoiceArray, string outputFile);
+
+void createSmallInvoice(vector<invoice> &invoiceArray, string smallOutputFile);
 
 
 void setupInvoices(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfLines, int amountOfCallers, const double payPerCall, const double payPerMinute);

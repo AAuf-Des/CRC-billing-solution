@@ -5,7 +5,14 @@
 #include <iostream>
 using namespace std;
 
-void phoneCall::getData(string file, int index){
+/*------------------------------ setters ------------------------------*/
+/*---------- used to assign values to variables in the class ----------*/
+
+
+//used to collect the data from the cdr file and store each line in invoice objects.
+//index is used to skip over the lines that we have already read.
+
+void phoneCall::setData(string file, int index){
     int count = 0;
     string line;
     char c;
@@ -17,47 +24,43 @@ void phoneCall::getData(string file, int index){
         count++;
     }
 
-    myFile >> caller >> c >> reciver >> c >> epochTime >> c >> durationMiliseconds >> c;
+    myFile >> caller >> c >> receiver >> c >> epochTime >> c >> durationMiliseconds >> c;
 
     publicNumber = caller;
-    epochToDate();
+    convertEpochToDate();
     setYearMonthValue();
     myFile.close();
 }
 
-void phoneCall::epochToDate(){
+//converts time_t to struc tm and saves it.
+void phoneCall::convertEpochToDate(){
     date = *gmtime(&epochTime);
 
     date.tm_mon += 1;
     date.tm_year += 1900;
 }
 
+//convert struc tm to yearmonth value* <- readme.txt
 void phoneCall::setYearMonthValue(){
     yearMonthValue = (date.tm_year * 100) + date.tm_mon;
 }
 
-long long int phoneCall::copyCaller(){
+
+/*--------------------------------- gettes ---------------------------------*/
+/*------------------ copy/assign private member variables ------------------*/
+
+long long int phoneCall::getCaller(){
     return caller;
 }
 
-int phoneCall::copyDurationMiliseconds(){
+int phoneCall::getDurationMiliseconds(){
     return durationMiliseconds;
 }
 
-
-int phoneCall::copyEpochTime(){
+time_t phoneCall::getEpochTime(){
     return epochTime;
 }
 
-int phoneCall::copyYearMonthValue(){
+int phoneCall::getYearMonthValue(){
     return yearMonthValue;
-}
-
-
-void phoneCall::printInfo(){
-    cout << "caller: " << caller << endl;
-    cout << "miliseconds duration: " << durationMiliseconds << endl;
-    cout << "year month value" << yearMonthValue << endl;
-    cout << "__________________________" << endl;
-
 }

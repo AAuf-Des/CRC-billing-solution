@@ -61,9 +61,7 @@ void invoice::setTotalDuration(){
     }
 }
 
-/*--------------------- minute converters / price setters ----------------------*/
-/*----------------- used to make the variables more readable -------------------*/
-/*---------------- to set the final total prices on the invoice ----------------*/
+/*--------------------- minute converters & price setters ----------------------*/
 
 /*------ minute converters ------*/
 
@@ -138,7 +136,9 @@ int invoice::getAmountOfCalls(){
     return amountOfCalls;
 }
 
-
+//prints info about a specific invoice object to a json file.
+//the bool islast variable is so that we can know when we are on the last object to print, because the bracket after the last object is not supposed to
+//have a comma like the rest.   example in .\bin\jsonTrail
 void invoice::printToJson(string outputFile, bool isLast){
     ofstream myFile;
     myFile.open(outputFile, std::ios::app);
@@ -146,6 +146,30 @@ void invoice::printToJson(string outputFile, bool isLast){
     myFile << "\t {" << endl;
     myFile << "\t  \"MSISDN\":\" " << number << "\"," << endl;
     for (int i = 0; i < invoiceDates.size(); i++){
+        myFile << "\t  \"" << invoiceDates[i].tm_year << "-" << invoiceDates[i].tm_mon << "\" :";
+        myFile << totalMinutesDurationPerMonth[i] << "," << endl;
+    }
+    myFile << "\t  \"Total\": " << totalPrice << endl;
+
+    if (isLast == true){
+        myFile << "\t }" << endl;
+    }
+    else {
+        myFile << "\t }," << endl;
+    }
+
+    myFile.close();
+}
+
+
+//same as above but only prints last 3 months 
+void invoice::smallPrintToJson(string smallOutputFile, bool isLast){
+    ofstream myFile;
+    myFile.open(smallOutputFile, std::ios::app);
+
+    myFile << "\t {" << endl;
+    myFile << "\t  \"MSISDN\":\" " << number << "\"," << endl;
+    for (int i = invoiceDates.size() - 3; i < invoiceDates.size(); i++){
         myFile << "\t  \"" << invoiceDates[i].tm_year << "-" << invoiceDates[i].tm_mon << "\" :";
         myFile << totalMinutesDurationPerMonth[i] << "," << endl;
     }

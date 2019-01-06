@@ -12,12 +12,14 @@ using namespace std;
 
 int main(int argc, const char * argv[])
 {
-    if (argc != 5){
-        cout << "error: invalid amount of arguments" << endl;
+    if (argc != 5){                                                            //check so that user dont input to many or to few 
+        cout << "error: invalid amount of arguments" << endl;                   //or to many arguments
         exit(EXIT_FAILURE);
     }
     const string outputFile = fixOutputName(argv);
+    const string smallOutputFile = fixSmallOutputName(argv);
     bool validArguments = checkIfValidArguments(argv);
+
     const string inputFile = argv[1];
 
     if (validArguments != true){
@@ -29,10 +31,10 @@ int main(int argc, const char * argv[])
     const double payPerMinute = atof(argv[4]);
 
     int linesAmount = countLines(inputFile);                                    //counts amount of lines on cdr file i.e. how many calls the cdr contains.
-    vector<phoneCall> call (linesAmount);
+    vector<phoneCall> call (linesAmount);                                       //create vector of phoneCalls
 
     for (int i = 0; i < linesAmount; i++){                                      //gather data from CDR to the objects.
-        call[i].getData(inputFile, i);
+        call[i].setData(inputFile, i);
     }
 
     sort(call.begin(), call.end(), [ ]( const auto& left, const auto& right )   //sort phonecalls by phoneNumber, lowest to highest.
@@ -43,10 +45,12 @@ int main(int argc, const char * argv[])
     int amountOfCallers = countAmountOfCallers(call, linesAmount);
 
     vector <invoice> invoiceArray(amountOfCallers);                             //create 1 invoice object for each caller (uniqe phonenumber) on the cdr
-
-    setupInvoices(invoiceArray, call, linesAmount, amountOfCallers, payPerCall, payPerMinute);
-
+    
+    setupInvoices(invoiceArray, call, linesAmount, amountOfCallers, payPerCall, payPerMinute);              
+    //create fullscale invoice that contain all months.
     createInvoice(invoiceArray, outputFile);
+
+    createSmallInvoice(invoiceArray, smallOutputFile);
 
     return 0;
 }

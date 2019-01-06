@@ -4,32 +4,32 @@
 #include <string>
 using namespace std;
 
-//phonecall class
 class phoneCall{
     private:
-    long long int reciver;
+    //original metadata from CDR
+    long long int receiver;
     long long int caller;
     time_t epochTime;
     struct tm date;
+
+    //fixed extraData
     int yearMonthValue;
     int durationMiliseconds;
     
     
     public:
-    long long int publicNumber;     //fix this, needed for lamba function
+    long long int publicNumber;
 
-    void getData(string file, int index);
+    //setters
+    void setData(string file, int index);
     void setYearMonthValue();
-    void epochToDate();
+    void convertEpochToDate();
     
     //copy functions
-    long long int copyCaller();
-    int copyDurationMiliseconds();
-    int copyEpochTime();
-    int copyYearMonthValue();
-
-    //print
-    void printInfo();
+    long long int getCaller();
+    int getDurationMiliseconds();
+    time_t getEpochTime();
+    int getYearMonthValue();
 };
 
 #endif

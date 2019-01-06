@@ -54,6 +54,7 @@ class invoice{
     void setTotalPrice();
 
     void printToJson(string outputFile, bool isLast);
+    void smallPrintToJson(string smallOutputFile, bool isLast);
 
     //getters / copy
     long long int getNumber();
