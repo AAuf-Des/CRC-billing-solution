@@ -6,18 +6,22 @@
 #include <ctime>
 using namespace std;
 
-//invoice class
 class invoice{
     private:
     long long int number;
+
+    //month related variables
     vector<int> yearMonthValue;
     vector<int> totalDurationPerMonth;
     vector<struct tm> invoiceDates;
+
     int totalDuration = 0;
 
+    //time/duration variables but holds minutes instread of seconds
     double totalMinutesDuration = 0;
     vector <double> totalMinutesDurationPerMonth;
 
+    //price related variables
     int amountOfCalls = 0;
     int totalStartPrice;
     double totalTimePrice;
@@ -27,38 +31,37 @@ class invoice{
 
     public:
 
-    //setters
+    //month related setters
     void setNumber(long long int x);
     void setAmountOfMonths(int amountOfMonths);
     void initializeDurationPerMonth(int durationThatMonth);
     void addDurationPerMonth(int monthIndex, int addedDuration);
-    void getYearMonthValue();
+    void setYearMonthValue();
     void setTmDate(int monthIndex, time_t tempMonth);
+
+
     void setTotalDuration();
-    void setTotalStartPrice(int payPerCall);
-    void setTotalTimePrice(double payPerMinute);
-    void setTotalPrice();
-
-    
-
-    void addCall();
-
 
     //convert miliseconds to minutes
     void convertToMinutes();
-    void getTotalMinutesDuration();
-    void getTotalMinutesDurationPerMonth();
+    void setTotalMinutesDuration();
+    void setTotalMinutesDurationPerMonth();
 
-    void toJson(string outputFile, bool isLast);
+    //price related setters
+    void addCall();
+    void setTotalStartPrice(double payPerCall);
+    void setTotalTimePrice(double payPerMinute);
+    void setTotalPrice();
 
-    long long int copyNumber();
-    int copyYearMonthValue(int monthIndex);
-    int copyTotalDurationPerMonth(int monthIndex);
-    int copyTotalDuration();
-    int copyAmountOfCalls();
-    int copyTotalTimePrice();
+    void printToJson(string outputFile, bool isLast);
 
-    void printInfo();
+    //getters / copy
+    long long int getNumber();
+    int getYearMonthValue(int monthIndex);
+    int getTotalDurationPerMonth(int monthIndex);
+    int getTotalDuration();
+    int getAmountOfCalls();
+
     
 
 

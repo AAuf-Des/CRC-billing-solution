@@ -177,7 +177,7 @@ void setInvoiceMonths(vector<invoice> &invoiceArray, vector<phoneCall> call, int
             invoiceArray[i].setTmDate(monthIteration, tempMonth);
             
             tempMonth += oneMonth;
-            invoiceArray[i].getYearMonthValue();
+            invoiceArray[i].setYearMonthValue();
             invoiceArray[i].initializeDurationPerMonth(0);
         }
         tempMonth = first;
@@ -190,7 +190,7 @@ void assignCallsToInvoices(vector<invoice> &invoiceArray, vector<phoneCall> call
     for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
         for (int dateIteration = 0; dateIteration < amountOfMonths; dateIteration++){
             for (int callIteration = 0; callIteration < amountOfLines; callIteration++){
-                if (call[callIteration].copyCaller() == invoiceArray[invoiceIteration].copyNumber() && call[callIteration].copyYearMonthValue() == invoiceArray[invoiceIteration].copyYearMonthValue(dateIteration)){
+                if (call[callIteration].copyCaller() == invoiceArray[invoiceIteration].getNumber() && call[callIteration].copyYearMonthValue() == invoiceArray[invoiceIteration].getYearMonthValue(dateIteration)){
                     invoiceArray[invoiceIteration].addDurationPerMonth(dateIteration, call[callIteration].copyDurationMiliseconds());
                     invoiceArray[invoiceIteration].addCall();
                 }
@@ -251,7 +251,7 @@ void createInvoice(vector<invoice> &invoiceArray, string outputFile ){
         if (i == invoiceArray.size() - 1)
             isLast = true;
 
-        invoiceArray[i].toJson(outputFile, isLast);
+        invoiceArray[i].printToJson(outputFile, isLast);
     }
 
     myFile.open(outputFile, std::ios::app);

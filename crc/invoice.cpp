@@ -7,12 +7,144 @@
 using namespace std;
 
 
-void invoice::toJson(string outputFile, bool isLast){
+/*------------------------------ setters ------------------------------*/
+/*---------- used to assign values to variables in the class ----------*/
+
+//assign msisdn number to object.
+void invoice::setNumber(long long int x){
+    number = x;
+}
+
+//resize all vectors in invoice object.
+void invoice::setAmountOfMonths(int amountOfMonths){
+    invoiceDates.resize(amountOfMonths);
+    totalDurationPerMonth.resize(amountOfMonths);
+    yearMonthValue.resize(amountOfMonths);
+    totalMinutesDurationPerMonth.resize(amountOfMonths);
+}
+
+//assign year month value to the invoice object
+void invoice::setYearMonthValue(){
+    for (int i = 0; i < invoiceDates.size(); i++){
+        yearMonthValue[i] = (invoiceDates[i].tm_year * 100) + invoiceDates[i].tm_mon;
+    }
+}
+
+//assign 0 to all indexes of the duration per month, to avoid problems when adding values to it.
+void invoice::initializeDurationPerMonth(int durationThatMonth){
+    for (int monthIteration = 0; monthIteration < totalDurationPerMonth.size(); monthIteration++){
+        totalDurationPerMonth[monthIteration] = durationThatMonth;
+    }
+    
+}
+
+//adds a passed call duration to passed month number.
+void invoice::addDurationPerMonth(int monthIndex, int addedDuration){
+    totalDurationPerMonth[monthIndex] += addedDuration;
+}
+
+//converts time_t to struct tm, and gm time.
+void invoice::setTmDate(int monthIndex ,time_t tempMonth){
+    invoiceDates[monthIndex] = *gmtime(&tempMonth);
+
+    invoiceDates[monthIndex].tm_year += 1900;
+    invoiceDates[monthIndex].tm_mon += 1;
+
+    setYearMonthValue();
+}
+
+//adds up all call durations for each month to get the total time in miliseconds
+//for all the time that the cdr covers.
+void invoice::setTotalDuration(){
+    for (int i = 0; i < invoiceDates.size(); i++){
+        totalDuration = totalDuration + totalDurationPerMonth[i];
+    }
+}
+
+/*--------------------- minute converters / price setters ----------------------*/
+/*----------------- used to make the variables more readable -------------------*/
+/*---------------- to set the final total prices on the invoice ----------------*/
+
+/*------ minute converters ------*/
+
+//calls the other to functions.
+void invoice::convertToMinutes(){
+    setTotalMinutesDuration();
+    setTotalMinutesDurationPerMonth();
+}
+
+//converts the total amount of miliseconds to the total amount of minutes
+void invoice::setTotalMinutesDuration(){
+    totalMinutesDuration = (double)totalDuration / 60000;
+}
+
+//converts the totalAmountOfMiliseconds per every month and converts it to minutes.
+void invoice::setTotalMinutesDurationPerMonth(){
+    for (int i = 0; i < invoiceDates.size(); i++){
+        totalMinutesDurationPerMonth[i] = (double)totalDurationPerMonth[i] / 60000;
+    }
+}
+
+
+
+/*------ price setters ------*/
+
+//increase amount of phonecalls by one.
+void invoice::addCall(){
+    amountOfCalls++;
+}
+
+
+//multiply the amount of calls with the price to start a phonecall.
+void invoice::setTotalStartPrice(double payPerCall){
+    totalStartPrice = amountOfCalls * payPerCall;
+}
+
+
+//multiply the total amount of minutes with the price per minute.
+void invoice::setTotalTimePrice(double payPerMinute){
+    totalTimePrice = totalMinutesDuration * payPerMinute;
+}
+
+
+//adds the total price for all minutes on the phone and price for all startup prices to 
+//get total price for a custoer over all the months that the cdr covers.
+void invoice::setTotalPrice(){
+    totalPrice = (double) totalStartPrice + (double) totalTimePrice;
+}
+
+
+
+/*--------------------------------- gettes ---------------------------------*/
+/*------------------ copy/assign private member variables ------------------*/
+
+long long int invoice::getNumber(){
+    return number;
+}
+
+int invoice::getYearMonthValue(int monthIndex){
+    return yearMonthValue[monthIndex];
+}
+
+int invoice::getTotalDurationPerMonth(int monthIndex){
+    return totalDurationPerMonth[monthIndex];
+}
+
+int invoice::getTotalDuration(){
+    return totalDuration;
+}
+
+int invoice::getAmountOfCalls(){
+    return amountOfCalls;
+}
+
+
+void invoice::printToJson(string outputFile, bool isLast){
     ofstream myFile;
     myFile.open(outputFile, std::ios::app);
 
     myFile << "\t {" << endl;
-    myFile << "\t  \"MSIDN\":\" " << number << "\"," << endl;
+    myFile << "\t  \"MSISDN\":\" " << number << "\"," << endl;
     for (int i = 0; i < invoiceDates.size(); i++){
         myFile << "\t  \"" << invoiceDates[i].tm_year << "-" << invoiceDates[i].tm_mon << "\" :";
         myFile << totalMinutesDurationPerMonth[i] << "," << endl;
@@ -27,124 +159,4 @@ void invoice::toJson(string outputFile, bool isLast){
     }
 
     myFile.close();
-}
-
-void invoice::setAmountOfMonths(int amountOfMonths){
-    invoiceDates.resize(amountOfMonths);
-    totalDurationPerMonth.resize(amountOfMonths);
-    yearMonthValue.resize(amountOfMonths);
-    totalMinutesDurationPerMonth.resize(amountOfMonths);
-}
-
-
-void invoice::getYearMonthValue(){
-    for (int i = 0; i < invoiceDates.size(); i++){
-        yearMonthValue[i] = (invoiceDates[i].tm_year * 100) + invoiceDates[i].tm_mon;
-    }
-}
-
-void invoice::initializeDurationPerMonth(int durationThatMonth){
-    for (int monthIteration = 0; monthIteration < totalDurationPerMonth.size(); monthIteration++){
-        totalDurationPerMonth[monthIteration] = durationThatMonth;
-    }
-    
-}
-
-void invoice::addDurationPerMonth(int monthIndex, int addedDuration){
-    totalDurationPerMonth[monthIndex] += addedDuration;
-}
-
-void invoice::setTmDate(int monthIndex ,time_t tempMonth){
-    invoiceDates[monthIndex] = *gmtime(&tempMonth);
-
-    invoiceDates[monthIndex].tm_year += 1900;
-    invoiceDates[monthIndex].tm_mon += 1;
-
-    getYearMonthValue();
-}
-
-void invoice::setNumber(long long int x){
-    number = x;
-}
-
-void invoice::setTotalDuration(){
-    for (int i = 0; i < invoiceDates.size(); i++){
-        totalDuration = totalDuration + totalDurationPerMonth[i];
-    }
-}
-
-void invoice::addCall(){
-    amountOfCalls++;
-}
-
-void invoice::setTotalStartPrice(int x){
-    totalStartPrice = amountOfCalls * x;
-}
-
-void invoice::setTotalTimePrice(double payPerMinute){
-    totalTimePrice = totalMinutesDuration * payPerMinute;
-}
-
-void invoice::setTotalPrice(){
-    totalPrice = (double) totalStartPrice + (double) totalTimePrice;
-}
-
-
-
-
-//getter
-long long int invoice::copyNumber(){
-    return number;
-}
-
-int invoice::copyYearMonthValue(int monthIndex){
-    return yearMonthValue[monthIndex];
-}
-
-int invoice::copyTotalDurationPerMonth(int monthIndex){
-    return totalDurationPerMonth[monthIndex];
-}
-
-int invoice::copyTotalDuration(){
-    return totalDuration;
-}
-
-
-//totalMinutes
-
-void invoice::convertToMinutes(){
-    getTotalMinutesDuration();
-    getTotalMinutesDurationPerMonth();
-}
-void invoice::getTotalMinutesDuration(){
-    totalMinutesDuration = (double)totalDuration / 60000;
-}
-
-void invoice::getTotalMinutesDurationPerMonth(){
-    for (int i = 0; i < invoiceDates.size(); i++){
-        totalMinutesDurationPerMonth[i] = (double)totalDurationPerMonth[i] / 60000;
-    }
-}
-
-int invoice::copyAmountOfCalls(){
-    return amountOfCalls;
-}
-
-
-//print info
-
-void invoice::printInfo(){
-    cout << "MSIDN: " << number << endl;
-    for (int i = 0; i < totalDurationPerMonth.size(); i++){
-        cout << yearMonthValue[i] << "-" << totalMinutesDurationPerMonth[i] <<  endl;
-    }
-    cout << "amount of minutes: " << totalMinutesDuration << endl;
-    cout << "amount of calls: " << amountOfCalls << endl;
-
-    cout << "minutes price total: " << totalTimePrice << endl;
-    cout << "start price total: " << totalStartPrice << endl;
-
-    cout << "TOTAL PRICE: " << totalPrice << endl;
-    
-    cout << "______________________" << endl;
 }
