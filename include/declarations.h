@@ -28,6 +28,13 @@ time_t getFirstDate(vector<phoneCall> call, int amountOfLines);
 
 void setInvoiceMonths(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfMonths, int amountOfLines, int amountOfCallers);
 
-void createInvoice(vector<invoice> invoiceArray, string outputFile);
+void createInvoice(vector<invoice> &invoiceArray, string outputFile);
+
+
+void setupInvoices(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfLines, int amountOfCallers, const double payPerCall, const double payPerMinute);
+
+void assignCallsToInvoices(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfMonths, int amountOfLines, int amountOfCallers);
+
+void calculateFinalTotalPrice(vector<invoice> &invoiceArray, const double payPerCall, const double payPerMinute);
 
 #endif

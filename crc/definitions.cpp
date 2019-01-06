@@ -4,6 +4,7 @@
 #include <ctime>
 #include <string>
 #include <fstream>
+#include <cmath>
 using namespace std;
 
 
@@ -61,29 +62,32 @@ bool checkIfFileExist(const char * argv[]){
 
 
 
-bool checkIfValidNumber(const char * argv[], int x){
+bool checkIfValidNumber(const char * argv[], int x)
+{
     string input = argv[x];
+
     bool valid = true;
 
     for (int i = 0; i < input.size() && valid == true; i++){
-        if (isdigit(input[i]) != true){
-            cout << input[i] << endl;
-            valid = false;
-            cout << "error " << argv[x] << " is not a valid number for price model." << endl;
+        if (isdigit(input[i]) == true){
+            valid = true;
         }
+        else if (input[i] == '.'){
+            valid = true;
+        }
+        else {
+            cout << "error: '" << argv[x] << "' is not a valid number for payment plan" << endl;
+            valid = false;
+        }
+    }
+
+    if (input.size() == 1 && input[0] == '.'){
+        cout << "error: '" << argv[x] << "' is not a valid number for payment plan" << endl;
+        valid = false;
     }
 
     return valid;
 }
-
-
-void fixArguments(const char * argv[], string &inputFile, string &outputFile){
-    inputFile = argv[1];
-    string argInput = argv[2];
-    outputFile = "./bin/" + argInput + ".json";
-}
-
-
 
 int countLines(string file){
     int count = 0;
@@ -109,6 +113,27 @@ int countAmountOfCallers(vector<phoneCall> call, int amountOfLines){
     return count;
 }
 
+
+//-----------------------------------------------------------------------------------------//
+//hub function, calls other functions that sets up the invoice objects.
+
+void setupInvoices(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfLines, int amountOfCallers, const double payPerCall, const double payPerMinute){
+
+    assignNumbersToInvoices(call, invoiceArray, amountOfLines);
+
+    int amountOfMonths = calculateAmountOfMonths(call, amountOfLines);
+
+    setInvoiceMonths(invoiceArray, call, amountOfMonths, amountOfLines, amountOfCallers);
+
+    assignCallsToInvoices(invoiceArray, call, amountOfMonths, amountOfLines, amountOfCallers);
+
+    calculateFinalTotalPrice(invoiceArray, payPerCall, payPerMinute);
+
+}
+
+//------------------------------------------------------------------------------------------//
+
+//function #1 in setupInvoices()
 void assignNumbersToInvoices(vector<phoneCall> call, vector<invoice> &invoiceArray, int amountOfLines){
     int invoiceNumber = 0;
     for (int i = 0; i < amountOfLines; i++){
@@ -119,6 +144,7 @@ void assignNumbersToInvoices(vector<phoneCall> call, vector<invoice> &invoiceArr
     }
 }
 
+//function #2 in setupInvoices()
 int calculateAmountOfMonths(vector<phoneCall> call, int linesAmount){
     time_t lastEpochDateInCdr = getLastDate(call, linesAmount);
     time_t firstEpochDateInCdr = getFirstDate(call, linesAmount);
@@ -133,7 +159,62 @@ int calculateAmountOfMonths(vector<phoneCall> call, int linesAmount){
     return totalMonths;
 }
 
+//function #3 in setupInvoices()
+void setInvoiceMonths(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfMonths, int amountOfLines, int amountOfCallers){
+    time_t first = getFirstDate(call, amountOfLines);
+    time_t last = getLastDate(call, amountOfLines);
+    const time_t oneMonth = 2628000;
 
+    struct tm firstDateMidMonth = *gmtime(&first);
+    firstDateMidMonth.tm_mday = 15;
+    time_t tempMonth = mktime(&firstDateMidMonth);                          //setting the first date in cdr to the same year and month but on 15th day of that month
+
+    for (int i = 0; i < amountOfCallers; i++){
+        invoiceArray[i].setAmountOfMonths(amountOfMonths);
+        
+        for(int monthIteration = 0; monthIteration < amountOfMonths; monthIteration++){
+
+            invoiceArray[i].setTmDate(monthIteration, tempMonth);
+            
+            tempMonth += oneMonth;
+            invoiceArray[i].getYearMonthValue();
+            invoiceArray[i].initializeDurationPerMonth(0);
+        }
+        tempMonth = first;
+    }
+}
+
+//function #4 in setupInvoices()
+void assignCallsToInvoices(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfMonths, int amountOfLines, int amountOfCallers){
+
+    for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
+        for (int dateIteration = 0; dateIteration < amountOfMonths; dateIteration++){
+            for (int callIteration = 0; callIteration < amountOfLines; callIteration++){
+                if (call[callIteration].copyCaller() == invoiceArray[invoiceIteration].copyNumber() && call[callIteration].copyYearMonthValue() == invoiceArray[invoiceIteration].copyYearMonthValue(dateIteration)){
+                    invoiceArray[invoiceIteration].addDurationPerMonth(dateIteration, call[callIteration].copyDurationMiliseconds());
+                    invoiceArray[invoiceIteration].addCall();
+                }
+                
+            }
+        }
+    }
+
+}
+//function #5 in setupInvoices()
+void calculateFinalTotalPrice(vector<invoice> &invoiceArray, const double payPerCall, const double payPerMinute){
+    for (int i = 0; i < invoiceArray.size(); i++){
+        invoiceArray[i].setTotalDuration();
+        invoiceArray[i].convertToMinutes();
+
+        invoiceArray[i].setTotalStartPrice(payPerCall);
+        invoiceArray[i].setTotalTimePrice(payPerMinute);
+        invoiceArray[i].setTotalPrice();
+
+    }    
+}
+
+
+//helperfunction for function #2 & #3 in setupInvoices
 time_t getLastDate(vector<phoneCall> call, int amountOfLines){
     int lastDate = call[0].copyEpochTime();
     for (int i = 0; i < amountOfLines; i++){
@@ -144,6 +225,7 @@ time_t getLastDate(vector<phoneCall> call, int amountOfLines){
     return lastDate;
 }
 
+//helperfunction for function #2 & #3 in setupInvoices
 time_t getFirstDate(vector<phoneCall> call, int amountOfLines){
     int firstDate = call[0].copyEpochTime();
     for (int i = 0; i < amountOfLines; i++){
@@ -155,34 +237,9 @@ time_t getFirstDate(vector<phoneCall> call, int amountOfLines){
 }
 
 
-void setInvoiceMonths(vector<invoice> &invoiceArray, vector<phoneCall> call, int amountOfMonths, int amountOfLines, int amountOfCallers){
-    time_t first = getFirstDate(call, amountOfLines);
-    time_t last = getLastDate(call, amountOfLines);
-    const time_t oneMonth = 2628000;
 
-    struct tm firstDateMidMonth = *gmtime(&first);
-    firstDateMidMonth.tm_mday = 15;
-    time_t tempMonth = mktime(&firstDateMidMonth);                          //setting the first date in cdr to the same year and month but on 15th day of that month
-
-
-
-    for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
-        invoiceArray[invoiceIteration].setAmountOfMonths(amountOfMonths);
-        
-        for(int monthIteration = 0; monthIteration < amountOfMonths; monthIteration++){
-
-            invoiceArray[invoiceIteration].setTmDate(monthIteration, tempMonth);
-            
-            tempMonth += oneMonth;
-
-            invoiceArray[invoiceIteration].setTotalDurationPerMonth(monthIteration, 0);
-            
-        }
-        tempMonth = first;
-    }
-}
-
-void createInvoice(vector<invoice> invoiceArray, string outputFile ){
+//creates jsonflie and prints object data to it.
+void createInvoice(vector<invoice> &invoiceArray, string outputFile ){
     ofstream myFile;
     myFile.open(outputFile);
     myFile << "{" << endl;

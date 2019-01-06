@@ -12,9 +12,12 @@ using namespace std;
 
 int main(int argc, const char * argv[])
 {
+    if (argc != 5){
+        cout << "error: not enough arguments" << endl;
+        exit(EXIT_FAILURE);
+    }
     const string outputFile = fixOutputName(argv);
     bool validArguments = checkIfValidArguments(argv);
-
     const string inputFile = argv[1];
 
     if (validArguments != true){
@@ -22,7 +25,13 @@ int main(int argc, const char * argv[])
         exit(EXIT_FAILURE);
     }
 
-    int linesAmount = countLines(inputFile);        //counts amount of lines on cdr file i.e. how many calls the cdr contains.
+    const double payPerCall = atof(argv[3]);
+    const double payPerMinute = atof(argv[4]);
+
+    cout << "pay per Minute" << payPerMinute << endl;
+    system("pause");
+
+    int linesAmount = countLines(inputFile);                                    //counts amount of lines on cdr file i.e. how many calls the cdr contains.
     vector<phoneCall> call (linesAmount);
 
     for (int i = 0; i < linesAmount; i++){                                      //gather data from CDR to the objects.
@@ -35,25 +44,18 @@ int main(int argc, const char * argv[])
     });
 
     int amountOfCallers = countAmountOfCallers(call, linesAmount);
-    vector <invoice> invoiceArray(amountOfCallers);
 
-    assignNumbersToInvoices(call, invoiceArray, linesAmount);               //assigning all MSISN numbers to the invoice objects
+    vector <invoice> invoiceArray(amountOfCallers);                             //create 1 invoice object for each caller (uniqe phonenumber) on the cdr
 
-    int amountOfMonths = calculateAmountOfMonths(call, linesAmount);
+    setupInvoices(invoiceArray, call, linesAmount, amountOfCallers, payPerCall, payPerMinute);
 
-    setInvoiceMonths(invoiceArray, call, amountOfMonths, linesAmount, amountOfCallers);
-
-    
-    for (int invoiceIteration = 0; invoiceIteration < amountOfCallers; invoiceIteration++){
-        for (int dateIteration = 0; dateIteration < amountOfMonths; dateIteration++){
-            for (int callIteration = 0; callIteration < linesAmount; callIteration++){
-                if (call[callIteration].copyCaller() == invoiceArray[invoiceIteration].copyNumber() && call[callIteration].copyYearMonthValue() == invoiceArray[invoiceIteration].copyYearMonthValue(dateIteration)){
-                    invoiceArray[invoiceIteration].addTotalDurationPerMonth(dateIteration, call[callIteration].copyDuration());
-                }
-            }
-        }
-        invoiceArray[invoiceIteration].setTotalDuration();
+    for (int i = 0; i < linesAmount; i++){
+        call[i].printInfo();
     }
+
+    for (int i = 0; i < amountOfCallers; i++){
+        invoiceArray[i].printInfo();
+    } 
 
     createInvoice(invoiceArray, outputFile);
 

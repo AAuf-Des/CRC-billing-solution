@@ -12,21 +12,24 @@ class phoneCall{
     time_t epochTime;
     struct tm date;
     int yearMonthValue;
-    int duration;
+    int durationMiliseconds;
+    
     
     public:
     long long int publicNumber;     //fix this, needed for lamba function
 
     void getData(string file, int index);
-    void printInfo();
     void setYearMonthValue();
     void epochToDate();
     
-    //copy functions, return caller, duration etc etc..
+    //copy functions
     long long int copyCaller();
-    int copyDuration();
+    int copyDurationMiliseconds();
     int copyEpochTime();
     int copyYearMonthValue();
+
+    //print
+    void printInfo();
 };
 
 #endif

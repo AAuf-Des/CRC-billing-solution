@@ -17,7 +17,7 @@ void phoneCall::getData(string file, int index){
         count++;
     }
 
-    myFile >> caller >> c >> reciver >> c >> epochTime >> c >> duration >> c;
+    myFile >> caller >> c >> reciver >> c >> epochTime >> c >> durationMiliseconds >> c;
 
     publicNumber = caller;
     epochToDate();
@@ -40,9 +40,10 @@ long long int phoneCall::copyCaller(){
     return caller;
 }
 
-int phoneCall::copyDuration(){
-    return duration;
+int phoneCall::copyDurationMiliseconds(){
+    return durationMiliseconds;
 }
+
 
 int phoneCall::copyEpochTime(){
     return epochTime;
@@ -50,4 +51,13 @@ int phoneCall::copyEpochTime(){
 
 int phoneCall::copyYearMonthValue(){
     return yearMonthValue;
+}
+
+
+void phoneCall::printInfo(){
+    cout << "caller: " << caller << endl;
+    cout << "miliseconds duration: " << durationMiliseconds << endl;
+    cout << "year month value" << yearMonthValue << endl;
+    cout << "__________________________" << endl;
+
 }
